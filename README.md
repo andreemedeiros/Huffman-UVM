@@ -13,4 +13,24 @@ Ambiente básico de um testbench UVM.
 
 ![](tb.png)
 
-##
+### Recursos:
+
+```
+UVM 1.2
+
+Licença Cadence/Xcelium.
+```
+
+## Simulação
+
+Para iniciar a simulação utilize o comando make.
+
+```
+make
+```
+
+## Autor
+
+* **André Medeiros** - [André Medeiros](https://github.com/andreemedeiros)
+
+Contribuição no projeto [Dec_Huffman_UVM](https://github.com/andreemedeiros/Dec_Huffman_UVM/graphs/contributors).
