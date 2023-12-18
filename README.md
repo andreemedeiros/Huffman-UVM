@@ -9,7 +9,7 @@
     - O plano de verificação se encontra num arquivo README dentro da pasta "tb".
 
 ## Estrutura do ambiente UVM
-Utilizando um ambiente de um testbench básico de UVM.
+Ambiente básico de um testbench UVM.
 
 ![](tb.png)
 
