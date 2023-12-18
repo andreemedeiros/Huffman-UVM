@@ -6,6 +6,7 @@
 - [Recursos](#Recursos)
 - [Simulação](#Simulação)
 - [Autor](#Autor)
+- [Licença](#Licença)
 
 ## Plano de Verificação
 
@@ -42,4 +43,4 @@ Contribuição no projeto [Dec_Huffman_UVM](https://github.com/andreemedeiros/De
 
 ## Licença
 
-Este projeto está licenciado sob a MIT License - veja a [LICENSE.md](LICENSE.md) para mais detalhes
+Este projeto está licenciado sob a MIT License - veja a [LICENSE.md](LICENSE.md) para mais detalhes.
