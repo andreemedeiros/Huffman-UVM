@@ -39,3 +39,7 @@ make
 * **André Medeiros** - [André Medeiros](https://github.com/andreemedeiros)
 
 Contribuição no projeto [Dec_Huffman_UVM](https://github.com/andreemedeiros/Dec_Huffman_UVM/graphs/contributors).
+
+## Licença
+
+Este projeto está licenciado sob a MIT License - veja a [LICENSE.md](LICENSE.md) para mais detalhes
