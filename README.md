@@ -3,6 +3,8 @@
 ## Índice
 - [Plano de Verificação](#Plano-de-Verificação)
 - [Estrutura do ambiente UVM](#Estrutura-do-ambiente-UVM)
+- [Recursos](#Recursos)
+- [Simulação](#Simulação)
 
 ## Plano de Verificação
 
