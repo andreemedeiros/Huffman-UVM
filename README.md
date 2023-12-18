@@ -5,8 +5,10 @@
 - [Estrutura do ambiente UVM](#Estrutura-do-ambiente-UVM)
 
 ## Plano de Verificação
-    
-    - O plano de verificação se encontra num arquivo README dentro da pasta "tb".
+
+```
+- O plano de verificação se encontra num arquivo README dentro da pasta "tb".
+```
 
 ## Estrutura do ambiente UVM
 Ambiente básico de um testbench UVM.
