@@ -5,6 +5,7 @@
 - [Estrutura do ambiente UVM](#Estrutura-do-ambiente-UVM)
 - [Recursos](#Recursos)
 - [Simulação](#Simulação)
+- [Autor](#Autor)
 
 ## Plano de Verificação
 
