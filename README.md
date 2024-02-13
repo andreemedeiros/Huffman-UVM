@@ -17,7 +17,7 @@
 ## Estrutura do ambiente UVM
 Ambiente básico de um testbench UVM.
 
-![](tb.png)
+![](png/tb.png)
 
 ### Recursos:
 
