@@ -10,7 +10,6 @@ importa os pacotes UVM e BVM. O pacote define um tipo de enumeração
 chamado transaction_type com os valores TYPE1 e TYPE2.
 ------------------------------------------------------------------*/
 `include "uvm_macros.svh"
-`include "bvm_macros.svh" // macros created by Brazil-IP / UFCG
 
 package huffman_dec_pkg;
 

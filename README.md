@@ -11,7 +11,7 @@
 ## Plano de Verificação
 
 ```
-- O plano de verificação se encontra num arquivo README dentro da pasta "tb".
+- O plano de verificação se encontra num arquivo PLAN dentro da pasta "tb".
 ```
 
 ## Estrutura do ambiente UVM
