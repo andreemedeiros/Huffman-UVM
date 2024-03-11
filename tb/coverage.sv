@@ -12,22 +12,41 @@ cobertura tem um ponto de cobertura in que tem bins para todos os
 possíveis valores de entrada. No método write, ele atualiza a cobertura
 com base na transação, amostrando o grupo de cobertura.
 ------------------------------------------------------------------*/
-class huffman_dec_coverage extends uvm_subscriber #(huffman_dec_transaction);
-  `uvm_component_utils(huffman_dec_coverage)
+class coverage extends uvm_component;
 
-  // Declare os bins de cobertura
-  covergroup cg_input @(posedge intf.clk);
-    coverpoint in {
-      bins range[0:31] = {0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31};
-    }
-  endgroup
+  `uvm_component_utils(coverage)
 
-  function new(string name, uvm_component parent);
+  transaction_in req;
+  uvm_analysis_imp#(transaction_in, coverage) req_port;
+
+  int min_tr;
+  int n_tr = 0;
+
+  event end_of_simulation;
+
+  function new(string name = "coverage", uvm_component parent= null);
     super.new(name, parent);
+    req_port = new("req_port", this);
+    req=new;
+    min_tr = 10000;
   endfunction
 
-  virtual function void write(huffman_dec_transaction t);
-    // Atualize a cobertura com base na transação
-    cg_input.sample();
+  function void build_phase(uvm_phase phase);
+    super.build_phase (phase);
   endfunction
-endclass
+
+  task run_phase(uvm_phase phase);
+    phase.raise_objection(this);
+    @(end_of_simulation);
+    phase.drop_objection(this);
+  endtask: run_phase
+
+  
+  function void write(transaction_in t);
+    n_tr = n_tr + 1;
+    if(n_tr >= min_tr)begin
+      ->end_of_simulation;
+    end
+  endfunction: write
+
+endclass : coverage

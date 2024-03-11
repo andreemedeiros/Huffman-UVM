@@ -10,26 +10,22 @@ de entrada para o DUT. Ele faz isso em um loop, criando uma nova transação
 para cada valor de i de 0 a 31. Para cada transação, ele chama start_item 
 para iniciar a transação e finish_item para finalizá-la.
 ------------------------------------------------------------------*/
-class huffman_dec_sequence extends uvm_sequence #(huffman_dec_transaction);
-  `uvm_object_utils(huffman_dec_sequence)
 
-  function new(string name = "huffman_dec_sequence");
-    super.new(name);
-  endfunction
+class sequence_in extends uvm_sequence #(transaction_in);
+    `uvm_object_utils(sequence_in)
 
-  virtual task body();
-    huffman_dec_transaction tr;
+    function new(string name="sequence_in");
+        super.new(name);
+    endfunction: new
 
-    // Crie uma nova transação
-    tr = huffman_dec_transaction::type_id::create("tr");
+    task body;
+        transaction_in tr;
 
-    // Preencha a transação com os valores de entrada para o DUT
-    for (int i = 0; i < 32; i++) begin
-      tr.in = i;
-      start_item(tr);
-      finish_item(tr);
-    end
-  endtask
-
-endclass
-
+        forever begin
+            tr = transaction_in::type_id::create("tr");
+            start_item(tr);
+            assert(tr.randomize());
+            finish_item(tr);
+        end
+    endtask: body
+endclass: sequence_in

@@ -11,20 +11,20 @@ define um método convert2string que retorna uma representação de string
 da transação. A representação de string é a string "in=" seguida pelo 
 valor da entrada formatado como um número decimal.
 ------------------------------------------------------------------*/
-class huffman_dec_transaction extends uvm_sequence_item;
-  `uvm_object_utils(huffman_dec_transaction)
 
-  // Declare a variável de entrada
-  bit [7:0] in;
+class transaction_in extends uvm_sequence_item;
+  rand bit [7:0] data;
 
   function new(string name = "");
     super.new(name);
   endfunction
 
-  // Função para converter a transação em uma string
-  virtual function string convert2string();
-    return $sformatf("in=%0d", in);
+  `uvm_object_param_utils_begin(transaction_in)
+    `uvm_field_int(data, UVM_UNSIGNED)
+  `uvm_object_utils_end
+
+  function string convert2string();
+    return $sformatf("{data = %d}",data);
   endfunction
 endclass
-
 

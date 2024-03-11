@@ -11,45 +11,35 @@ interface do banco de dados de configuração UVM. Se a obtenção falhar,
 ele emite uma mensagem fatal. No método connect_phase, o agente conecta 
 o driver e o monitor à interface.
 ------------------------------------------------------------------*/
+class agent extends uvm_agent;
+    
+    typedef uvm_sequencer#(transaction_in) sequencer;
+    sequencer  sqr;
+    driver   drv;
+    monitor  mon;
 
-class huffman_dec_agent extends uvm_agent;
-  `uvm_component_utils(huffman_dec_agent)
+    uvm_analysis_port #(transaction_in) agt_req_port;
+    uvm_analysis_port #(transaction_out) agt_resp_port;
 
-  // Declare o driver, o monitor e o sequenciador
-  huffman_dec_driver driver;
-  huffman_dec_monitor monitor;
-  uvm_sequencer #(huffman_dec_transaction) sequencer;
+    `uvm_component_utils(agent)
 
-  // Declare a interface
-  virtual huffman_dec_if intf;
+    function new(string name = "agent", uvm_component parent = null);
+        super.new(name, parent);
+        agt_req_port  = new("agt_req_port", this);
+        agt_resp_port = new("agt_resp_port", this);
+    endfunction
 
-  function new(string name, uvm_component parent);
-    super.new(name, parent);
-  endfunction
+    virtual function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        mon = monitor::type_id::create("mon", this);
+        sqr = sequencer::type_id::create("sqr", this);
+        drv = driver::type_id::create("drv", this);
+    endfunction
 
-  function void build_phase(uvm_phase phase);
-    super.build_phase(phase);
-
-    // Crie o driver, o monitor e o sequenciador
-    driver = huffman_dec_driver::type_id::create("driver", this);
-    monitor = huffman_dec_monitor::type_id::create("monitor", this);
-    sequencer = uvm_sequencer #(huffman_dec_transaction)::type_id::create("sequencer", this);
-
-    // Conecte o driver ao sequenciador
-    driver.sequencer = sequencer;
-
-    // Obtenha a interface
-    if (!uvm_config_db #(virtual huffman_dec_if)::get(this, "", "intf", intf)) begin
-      `uvm_fatal("NOVINTF", "`uvm_config_db #(virtual huffman_dec_if)::get() failed")
-    end
-  endfunction
-
-  function void connect_phase(uvm_phase phase);
-    super.connect_phase(phase);
-
-    // Conecte o driver e o monitor à interface
-    driver.intf = intf;
-    monitor.intf = intf;
-  endfunction
-endclass
-
+    virtual function void connect_phase(uvm_phase phase);
+        super.connect_phase(phase);
+        mon.req_port.connect(agt_req_port);
+        mon.resp_port.connect(agt_resp_port);
+        drv.seq_item_port.connect(sqr.seq_item_export);
+    endfunction
+endclass: agent

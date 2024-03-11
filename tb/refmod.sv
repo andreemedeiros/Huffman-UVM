@@ -14,28 +14,63 @@ implementada como um bloco case. Para cada valor possível da entrada,
 ele define um valor correspondente para a saída. Se a entrada não 
 corresponder a nenhum dos casos, a saída é definida como 0.
 ------------------------------------------------------------------*/
+import "DPI-C" context function int refmod_dec(int y);
 
-// Modelo de Referência Simplificado o para o Decodificador Huffman
-class huffman_dec_refmod(input logic clock, input logic reset, input logic [5:0] in, output logic [5:0] out);
-    `uvm_component_utils(huffman_dec_refmod)
-    always_ff @(posedge clock or posedge reset) begin
-        if (reset) begin
-            // Inicialize a saída
-            out <= 6'b0;
-        end else begin
-            // Lógica de decodificação Huffman
-            case (in)
-                6'b000000: out <= 6'b000001;
-                6'b000001: out <= 6'b000010;
-                6'b000010: out <= 6'b000011;
-                6'b000011: out <= 6'b000100;
-                6'b000100: out <= 6'b000101;
-                6'b000101: out <= 6'b000110;
-                6'b000110: out <= 6'b000111;
-                6'b000111: out <= 6'b001000;
-                // Adicione mais casos conforme necessário
-                default: out <= 6'b0; // Valor padrão se a entrada não corresponder a nenhum caso
-            endcase
+// Modelo de Referência 
+class refmod extends uvm_component;
+    `uvm_component_utils(refmod)
+    
+    transaction_in tr_in;
+    transaction_out tr_out;
+    
+    uvm_analysis_imp #(transaction_in, refmod) in;
+    uvm_analysis_port #(transaction_out) out;
+    
+    event begin_refmodtask, begin_record, end_record;
+
+    function new(string name = "refmod", uvm_component parent);
+        super.new(name, parent);
+        in = new("in", this);
+        out = new("out", this);
+    endfunction
+    
+    virtual function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        tr_out = transaction_out::type_id::create("tr_out", this);
+    endfunction: build_phase
+    
+    virtual task run_phase(uvm_phase phase);
+        super.run_phase(phase);
+        fork
+            refmod_task();
+            record_tr();
+        join
+    endtask: run_phase
+
+    task refmod_task();
+        forever begin
+            @begin_refmodtask;
+            tr_out = transaction_out::type_id::create("tr_out", this);
+            -> begin_record;
+            tr_out.result = refmod_dec(tr_in.data);
+            #10;
+            -> end_record;
+            out.write(tr_out);
         end
-    end
-endclass
+    endtask : refmod_task
+
+    virtual function write (transaction_in t);
+        tr_in = transaction_in#()::type_id::create("tr_in", this);
+        tr_in.copy(t);
+       -> begin_refmodtask;
+    endfunction
+
+    virtual task record_tr();
+        forever begin
+            @(begin_record);
+            begin_tr(tr_out, "refmod");
+            @(end_record);
+            end_tr(tr_out);
+        end
+    endtask
+endclass: refmod

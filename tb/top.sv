@@ -12,28 +12,44 @@ configuração UVM. Se a configuração falhar, ele emite uma mensagem fatal.
 Em seguida, ele executa o teste UVM chamado "huffman_dec_test".
 ------------------------------------------------------------------*/
 module huffman_dec_top;
-   import uvm_pkg::*;
-   import test_pkg::*;
+  import uvm_pkg::*;
+  import pkg::*;
 
-  // Declare o relógio
-  reg clk;
-
-  // Declare a interface e o DUT
-  huffman_dec_if intf(.clk(clk));
-  huffman_dec dut(intf);
+  logic clk;
+  logic rst;
 
   initial begin
-    // Inicialize o relógio
     clk = 0;
-    forever #10 clk = ~clk;
-
-    // Configure a interface para o teste UVM
-    if (!uvm_config_db #(virtual huffman_dec_if)::set(null, "*", "intf", intf)) begin
-      $fatal("Falha ao definir interface");
-    end
-
-    // Execute o teste UVM
-    run_test("huffman_dec_test");
+    rst = 1;
   end
+
+  always #10 clk = !clk;
+
+  // Declare a interface e o DUT
+  interface_if dut_if(.clk(clk), .rst(rst));
+
+  huffman_dec dut(
+              .clk_i(clk),
+              .rstn_i(rst),
+              .S(SX),
+  );
+
+  initial begin
+    `ifdef XCELIUM
+       $recordvars();
+    `endif
+    `ifdef VCS
+       $vcdpluson;
+    `endif
+    `ifdef QUESTA
+       $wlfdumpvars();
+       set_config_int("*", "recording_detail", 1);
+    `endif
+
+    uvm_config_db#(interface_vif)::set(uvm_root::get(), "*", "vif", dut_if);
+
+    run_test("simple_test");
+  end
+
 endmodule
 

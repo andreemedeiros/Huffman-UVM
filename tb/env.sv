@@ -10,32 +10,30 @@ ele cria uma instância do agente, obtém a interface do banco de dados
 de configuração UVM e configura a interface para o agente. Se a obtenção
 da interface falhar, ele emite uma mensagem fatal.
 ------------------------------------------------------------------*/
-class huffman_dec_env extends uvm_env;
-  `uvm_component_utils(huffman_dec_env)
 
-  // Declare o agente
-  huffman_dec_agent agent;
+class env extends uvm_env;
 
-  // Declare a interface
-  virtual huffman_dec_if intf;
+    agent       mst;
+    scoreboard  sb;
+    coverage    cov;
+    
+    `uvm_component_utils(env)
 
-  function new(string name, uvm_component parent);
-    super.new(name, parent);
-  endfunction
+    function new(string name, uvm_component parent = null);
+        super.new(name, parent);
+    endfunction
 
-  function void build_phase(uvm_phase phase);
-    super.build_phase(phase);
+    virtual function void build_phase(uvm_phase phase);
+        super.build_phase(phase);
+        mst = agent::type_id::create("mst", this);
+        sb = scoreboard::type_id::create("sb", this);
+        cov = coverage::type_id::create("cov",this);
+    endfunction
 
-    // Crie o agente
-    agent = huffman_dec_agent::type_id::create("agent", this);
-
-    // Obtenha a interface
-    if (!uvm_config_db #(virtual huffman_dec_if)::get(this, "", "intf", intf)) begin
-      `uvm_fatal("NOVINTF", "`uvm_config_db #(virtual huffman_dec_if)::get() failed")
-    end
-
-    // Configure a interface para o agente
-    uvm_config_db #(virtual huffman_dec_if)::set(this, "agent", "intf", intf);
-  endfunction
+    virtual function void connect_phase(uvm_phase phase);
+        super.connect_phase(phase);
+        mst.agt_req_port.connect(cov.req_port);
+        mst.agt_resp_port.connect(sb.ap_comp);
+        mst.agt_req_port.connect(sb.ap_rfm);
+    endfunction
 endclass
-

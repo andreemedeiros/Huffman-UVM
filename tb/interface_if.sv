@@ -12,8 +12,7 @@ tem um atraso de entrada padrão de 1 passo e um atraso de saída padrão
 de 1 passo. Ele define os sinais de reset, entrada, saída e validade 
 como entradas e saídas do bloco de clocking.
 ------------------------------------------------------------------*/
-interface huffman_dec_if(input logic clk);
-  logic reset;
+interface huffman_dec_if(input logic clk, rst);
   logic [7:0] in;
   logic [7:0] out;
   logic valid;
@@ -21,7 +20,7 @@ interface huffman_dec_if(input logic clk);
   // Clocking block para sincronizar as operações do driver e do monitor
   clocking cb @(posedge clk);
     default input #1step output #1step;
-    inout reset, in, out, valid;
+    inout rst, in, out, valid;
   endclocking
 endinterface
 

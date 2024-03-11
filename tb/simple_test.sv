@@ -14,38 +14,25 @@ run_phase, ele levanta uma objeção para indicar que o teste está em andamento
 executa as duas tarefas de teste e então solta a objeção para indicar que o 
 teste está concluído.
 ------------------------------------------------------------------*/
-class huffman_dec_test extends uvm_test;
-  `uvm_component_utils(huffman_dec_test)
+class simple_test extends uvm_test;
+  env env_h;
+  sequence_in seq;
 
-  huffman_dec_env env;
+  `uvm_component_utils(simple_test)
 
-  function new(string name = "huffman_dec_test", uvm_component parent = null);
+  function new(string name, uvm_component parent = null);
     super.new(name, parent);
   endfunction
 
   virtual function void build_phase(uvm_phase phase);
     super.build_phase(phase);
-    env = huffman_dec_env::type_id::create("env", this);
+    env_h = env::type_id::create("env_h", this);
+    seq = sequence_in::type_id::create("seq", this);
+
   endfunction
 
-  virtual task run_test1();
-    huffman_dec_sequence seq1;
-    seq1 = huffman_dec_sequence::type_id::create("seq1");
-    seq1.start(env.agent.sequencer);
-  endtask
-
-  virtual task run_test2();
-    huffman_dec_sequence seq2;
-    seq2 = huffman_dec_sequence::type_id::create("seq2");
-    seq2.start(env.agent.sequencer);
-  endtask
-
-  virtual task run_phase(uvm_phase phase);
-    phase.raise_objection(this);
-    run_test1();
-    run_test2();
-    phase.drop_objection(this);
-  endtask
+  task run_phase(uvm_phase phase);
+    seq.start(env_h.mst.sqr);
+  endtask: run_phase
 
 endclass
-
